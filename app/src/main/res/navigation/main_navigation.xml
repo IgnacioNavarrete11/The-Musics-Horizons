@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/navigation_home_fragment">
+
+    <fragment
+        android:id="@+id/navigation_home_fragment"
+        android:name="com.example.themusicshorizons.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" />
+    <fragment
+        android:id="@+id/navigation_my_horizon_fragment"
+        android:name="com.example.themusicshorizons.fragments.MyHorizonFragment"
+        android:label="fragment_my_horizon"
+        tools:layout="@layout/fragment_my_horizon" />
+    <fragment
+        android:id="@+id/navigation_profile_fragment"
+        android:name="com.example.themusicshorizons.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+</navigation>
