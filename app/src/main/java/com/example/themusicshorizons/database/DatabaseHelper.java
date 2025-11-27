@@ -12,15 +12,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+// Esta clase es la arquitecta de la base de datos. Se encarga de crearla, actualizarla y proporcionar los métodos para interactuar con ella.
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "musichorizons.db";
-    private static final int DATABASE_VERSION = 1;
+    // Si se cambia la versión, se ejecutará el método onUpgrade.
+    private static final int DATABASE_VERSION = 3;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    // Este método se ejecuta solo una vez, la primera vez que se crea la base de datos.
     @Override
     public void onCreate(SQLiteDatabase db) {
         final String CREATE_TABLE_USERS = "CREATE TABLE " + UserEntry.TABLE_NAME + " (" +
@@ -35,36 +38,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 DiscoveredSongEntry.COLUMN_USER_ID + " INTEGER NOT NULL, " +
                 DiscoveredSongEntry.COLUMN_SONG_DATA + " TEXT NOT NULL, " +
                 DiscoveredSongEntry.COLUMN_DETECTED_DATE + " TEXT NOT NULL, " +
+                "artwork_url TEXT, " +
+                "spotify_url TEXT, " +
                 "FOREIGN KEY(" + DiscoveredSongEntry.COLUMN_USER_ID + ") REFERENCES " + UserEntry.TABLE_NAME + "(" + UserEntry._ID + "));";
-
-        final String CREATE_TABLE_VISUAL_SCANS = "CREATE TABLE " + VisualScanEntry.TABLE_NAME + " (" +
-                VisualScanEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                VisualScanEntry.COLUMN_USER_ID + " INTEGER NOT NULL, " +
-                VisualScanEntry.COLUMN_SCAN_TYPE + " TEXT NOT NULL, " +
-                VisualScanEntry.COLUMN_RESULT_DATA + " TEXT NOT NULL, " +
-                "FOREIGN KEY(" + VisualScanEntry.COLUMN_USER_ID + ") REFERENCES " + UserEntry.TABLE_NAME + "(" + UserEntry._ID + "));";
 
         final String CREATE_TABLE_SAVED_EVENTS = "CREATE TABLE " + SavedEventEntry.TABLE_NAME + " (" +
                 SavedEventEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 SavedEventEntry.COLUMN_USER_ID + " INTEGER NOT NULL, " +
+                SavedEventEntry.COLUMN_EVENT_ID + " TEXT UNIQUE NOT NULL, " +
                 SavedEventEntry.COLUMN_EVENT_DATA + " TEXT NOT NULL, " +
                 SavedEventEntry.COLUMN_SAVED_DATE + " TEXT NOT NULL, " +
                 "FOREIGN KEY(" + SavedEventEntry.COLUMN_USER_ID + ") REFERENCES " + UserEntry.TABLE_NAME + "(" + UserEntry._ID + "));";
 
         db.execSQL(CREATE_TABLE_USERS);
         db.execSQL(CREATE_TABLE_DISCOVERED_SONGS);
-        db.execSQL(CREATE_TABLE_VISUAL_SCANS);
         db.execSQL(CREATE_TABLE_SAVED_EVENTS);
     }
 
+    // Se ejecuta si se incrementa el número de DATABASE_VERSION para actualizar la estructura de la base de datos.
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + DiscoveredSongEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + VisualScanEntry.TABLE_NAME);
-        db.execSQL("DROP TABLE IF EXISTS " + SavedEventEntry.TABLE_NAME);
         db.execSQL("DROP TABLE IF EXISTS " + UserEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + DiscoveredSongEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SavedEventEntry.TABLE_NAME);
         onCreate(db);
     }
+
+    // --- MÉTODOS DE USUARIO ---
 
     public boolean addUser(String username, String password, String email) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -82,31 +82,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String selection = UserEntry.COLUMN_USERNAME + " = ?" + " AND " + UserEntry.COLUMN_PASSWORD + " = ?";
         String[] selectionArgs = { username, password };
         return db.query(UserEntry.TABLE_NAME, columns, selection, selectionArgs, null, null, null);
-    }
-
-    public boolean addDiscoveredSong(long userId, String songData) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-        String currentDate = sdf.format(new Date());
-        values.put(DiscoveredSongEntry.COLUMN_USER_ID, userId);
-        values.put(DiscoveredSongEntry.COLUMN_SONG_DATA, songData);
-        values.put(DiscoveredSongEntry.COLUMN_DETECTED_DATE, currentDate);
-        long result = db.insert(DiscoveredSongEntry.TABLE_NAME, null, values);
-        return result != -1;
-    }
-
-    public Cursor getSongsForUser(long userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(
-            DiscoveredSongEntry.TABLE_NAME,
-            null,
-            DiscoveredSongEntry.COLUMN_USER_ID + " = ?",
-            new String[]{String.valueOf(userId)},
-            null,
-            null,
-            DiscoveredSongEntry.COLUMN_DETECTED_DATE + " DESC"
-        );
     }
 
     public String getUserEmail(long userId) {
@@ -128,5 +103,64 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
         return email;
+    }
+
+    // --- MÉTODOS DE CANCIONES ---
+
+    public boolean addDiscoveredSong(long userId, String songData, String artworkUrl, String spotifyUrl) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        values.put(DiscoveredSongEntry.COLUMN_USER_ID, userId);
+        values.put(DiscoveredSongEntry.COLUMN_SONG_DATA, songData);
+        values.put(DiscoveredSongEntry.COLUMN_DETECTED_DATE, currentDate);
+        values.put("artwork_url", artworkUrl);
+        values.put("spotify_url", spotifyUrl);
+        long result = db.insert(DiscoveredSongEntry.TABLE_NAME, null, values);
+        return result != -1;
+    }
+
+    public Cursor getSongsForUser(long userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(DiscoveredSongEntry.TABLE_NAME, null, DiscoveredSongEntry.COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)}, null, null, DiscoveredSongEntry.COLUMN_DETECTED_DATE + " DESC");
+    }
+
+    public void deleteDiscoveredSong(long songId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(DiscoveredSongEntry.TABLE_NAME, DiscoveredSongEntry._ID + " = ?", new String[]{String.valueOf(songId)});
+    }
+
+    // --- MÉTODOS DE EVENTOS ---
+
+    public boolean addSavedEvent(long userId, String eventId, String eventData) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        String currentDate = sdf.format(new Date());
+        values.put(SavedEventEntry.COLUMN_USER_ID, userId);
+        values.put(SavedEventEntry.COLUMN_EVENT_ID, eventId);
+        values.put(SavedEventEntry.COLUMN_EVENT_DATA, eventData);
+        values.put(SavedEventEntry.COLUMN_SAVED_DATE, currentDate);
+        long result = db.insert(SavedEventEntry.TABLE_NAME, null, values);
+        return result != -1;
+    }
+
+    public void deleteSavedEvent(long userId, String eventId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SavedEventEntry.TABLE_NAME, SavedEventEntry.COLUMN_USER_ID + " = ? AND " + SavedEventEntry.COLUMN_EVENT_ID + " = ?", new String[]{String.valueOf(userId), eventId});
+    }
+
+    public boolean isEventSaved(long userId, String eventId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(SavedEventEntry.TABLE_NAME, new String[]{SavedEventEntry._ID}, SavedEventEntry.COLUMN_USER_ID + " = ? AND " + SavedEventEntry.COLUMN_EVENT_ID + " = ?", new String[]{String.valueOf(userId), eventId}, null, null, null);
+        boolean exists = (cursor.getCount() > 0);
+        cursor.close();
+        return exists;
+    }
+
+    public Cursor getSavedEventsForUser(long userId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        return db.query(SavedEventEntry.TABLE_NAME, null, SavedEventEntry.COLUMN_USER_ID + " = ?", new String[]{String.valueOf(userId)}, null, null, SavedEventEntry.COLUMN_SAVED_DATE + " DESC");
     }
 }

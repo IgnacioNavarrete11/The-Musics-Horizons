@@ -7,7 +7,7 @@
     android:background="@drawable/main_background_gradient">
 
     <ImageView
-        android:id="@+id/albumArtImageView"
+        android:id="@+id/albumArtImageViewDetail"
         android:layout_width="250dp"
         android:layout_height="250dp"
         android:layout_marginTop="48dp"
@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/titleTextView"
+        android:id="@+id/titleTextViewDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -29,57 +29,45 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/albumArtImageView"
+        app:layout_constraintTop_toBottomOf="@+id/albumArtImageViewDetail"
         tools:text="Título de la Canción" />
 
     <TextView
-        android:id="@+id/artistTextView"
+        android:id="@+id/artistTextViewDetail"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:textColor="@color/celeste"
         android:textSize="20sp"
-        app:layout_constraintEnd_toEndOf="@+id/titleTextView"
-        app:layout_constraintStart_toStartOf="@+id/titleTextView"
-        app:layout_constraintTop_toBottomOf="@+id/titleTextView"
+        app:layout_constraintEnd_toEndOf="@+id/titleTextViewDetail"
+        app:layout_constraintStart_toStartOf="@+id/titleTextViewDetail"
+        app:layout_constraintTop_toBottomOf="@+id/titleTextViewDetail"
         tools:text="Nombre del Artista" />
 
-    <TextView
-        android:id="@+id/albumTextView"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="@+id/artistTextView"
-        app:layout_constraintStart_toStartOf="@+id/artistTextView"
-        app:layout_constraintTop_toBottomOf="@+id/artistTextView"
-        tools:text="Nombre del Álbum" />
-
     <Button
-        android:id="@+id/spotifyButton"
-        style="@style/App.Button.Secondary" 
+        android:id="@+id/spotifyButtonDetail"
+        style="@style/App.Button.Secondary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
         android:text="ABRIR EN SPOTIFY"
-        app:layout_constraintBottom_toTopOf="@+id/saveButton"
+        app:layout_constraintBottom_toTopOf="@+id/deleteButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/saveButton"
+        android:id="@+id/deleteButton"
         style="@style/App.Button.Primary"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="48dp"
-        android:text="GUARDAR EN MI HORIZONTE"
+        android:backgroundTint="#C62828" 
+        android:text="ELIMINAR DE MI HORIZONTE"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

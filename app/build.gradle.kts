@@ -54,8 +54,15 @@ dependencies {
     implementation("androidx.camera:camera-lifecycle:${cameraxVersion}")
     implementation("androidx.camera:camera-view:${cameraxVersion}")
 
-    // Dependencia para ML Kit Barcode Scanning
+    // Dependencias de ML Kit
     implementation("com.google.mlkit:barcode-scanning:17.2.0")
+    implementation("com.google.mlkit:text-recognition:16.0.0") // << NUEVA LIBRERÍA
+
+    // Dependencia para Glide (Carga de imágenes)
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+    // Dependencia para Servicios de Ubicación
+    implementation("com.google.android.gms:play-services-location:21.0.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
