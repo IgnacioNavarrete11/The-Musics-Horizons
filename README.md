@@ -78,21 +78,31 @@ Esta aplicación está dirigida a:
 
 A continuación, se presentan los diagramas que ilustran la arquitectura, flujo y diseño de la aplicación.
 <details>
-<summary>Ver todos los diagramas de diseño</summary>
   
-### 1. Diagrama de Diseño (Flujo de Pantallas)
+<summary>Ver todos los diagramas</summary>
 
+
+
+### 1. Diagrama de Diseño (Flujo de Pantallas)
+<summary>Ver todos los diagramas de Diseño</summary>
+ <details>
+   
 ![Diagrama de Diseño (Técnico)] <img width="1041" height="867" alt="Diseño tecnico" src="https://github.com/user-attachments/assets/34fa4f79-9a22-48f1-b7db-f38ba5f4b1f4" />
 
 ![Diagrama de Diseño (Básico)] <img width="3183" height="221" alt="Diseño basico" src="https://github.com/user-attachments/assets/60923a59-b452-420c-b277-ddccf14436c9" />
+</details>
+  
 
 
 ### 2. Diagrama de Clases
-
+<summary>Ver todos los diagramas de Clases</summary>
+<details>
+  
 ![Diagrama de Clases (Técnico)] <img width="1162" height="385" alt="Clases tecnico" src="https://github.com/user-attachments/assets/881523d6-b542-4da9-9410-909ea1529ade" />
 
 ![Diagrama de Clases (Básico)] <img width="593" height="353" alt="Clases basico" src="https://github.com/user-attachments/assets/38d73c98-a2b7-4507-aae1-077ae474a5dc" />
 
+</details>
 
 ### 3. Diagramas de Flujo (Lógica Principal)
 
