@@ -70,6 +70,7 @@ Esta aplicación está dirigida a:
 - **Lenguaje:** Java
 - **Base de Datos:** SQLite
 - **Componentes Jetpack:** CameraX, ViewBinding, Navigation
+- **Apis:** AudD Api, TicketMaster Developer
 - **Otras Librerías:** Glide, Google ML Kit, Google Play Services, Retrofit
 
 ---
